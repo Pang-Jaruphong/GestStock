@@ -1,0 +1,21 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "",
+  "homepage": "https://github.com/Pang-Jaruphong/GestStock#readme",
+  "bugs": {
+    "url": "https://github.com/Pang-Jaruphong/GestStock/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Pang-Jaruphong/GestStock.git"
+  },
+  "license": "ISC",
+  "author": "Jaruphong Plancherel",
+  "type": "module",
+  "main": "app.js",
+  "scripts": {
+    "start": "nodemon app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}
