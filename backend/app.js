@@ -6,6 +6,7 @@ import articlesRouter from "./router/articles.js";
 import suppliersRouter from "./router/suppliers.js";
 import ordersRouter from "./router/orders.js";
 import storiesRouter from "./router/stories.js";
+import ordersHasArticlesRouter from "./router/ordersHasArticles.js";
 
 
 const app = express();
@@ -19,6 +20,7 @@ app.use('/articles', articlesRouter);
 app.use('/suppliers', suppliersRouter);
 app.use('/orders', ordersRouter);
 app.use('/stories', storiesRouter);
+app.use('/ordersHasArticles', ordersHasArticlesRouter);
 
 app.get('/', (req, res)=>{
     res.send('Système de gestion des stocks et des inventaires');
