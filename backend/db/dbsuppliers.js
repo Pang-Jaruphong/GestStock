@@ -1,11 +1,11 @@
 import {db} from './database.js'
 
-const dbArticles = {
-    getAllArticles : async () =>{
+const dbSuppliers = {
+    getAllSuppliers : async () =>{
         let con;
         try {
             con = await db.connectToDatabase();
-            const sql = `SELECT * FROM articles`
+            const sql = `SELECT * FROM suppliers`
             const [rows] = await con.query(sql);
             return rows;
         } catch (error) {
@@ -16,4 +16,4 @@ const dbArticles = {
         }
     }
 }
-export {dbArticles};
+export {dbSuppliers};

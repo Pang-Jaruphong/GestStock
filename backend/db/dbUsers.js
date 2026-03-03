@@ -15,7 +15,7 @@ const dbUsers = {
             const [rows] = await con.query(sql);
             return rows;
         } catch (error) {
-            console.log(error);
+            console.log("Erreur SQL lors de la récupération :",error.message);
             throw error;
         } finally {
             if (con) await db.disconnectFromDatabase(con);
