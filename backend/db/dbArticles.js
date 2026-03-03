@@ -27,6 +27,35 @@ const dbArticles = {
         } finally {
             if (con) await db.disconnectFromDatabase(con);
         }
+    },
+    createArticles : async (articles) =>{
+        let con;
+        try {
+            con = await db.connectToDatabase();
+            const sql =
+                `INSERT INTO articles a
+                (refArticle, name, Description, buyPrice, salePrice, minStock, supplier_id)
+                VALUES (?,?,?,?,?,?,?)`;
+
+            const values = [
+                a.refArticle,
+                a.name,
+                a.description,
+                a.buyPrice,
+                a.salePrice,
+                a.minStock,
+                a.supplier_id
+            ]
+
+            const [result] = await con.query(sql, values);
+            return result.insertId;
+        } catch (error) {
+            console.error("Erreur BDD lors de la création d'un article");
+
+            throw error;
+        } finally {
+            if (con) await db.disconnectFromDatabase(con);
+        }
     }
 }
 export {dbArticles};

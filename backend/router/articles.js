@@ -12,4 +12,11 @@ articlesRouter.get('/', async (req, res) => {
     }
 })
 
+articlesRouter.post('/', async (req, res) => {
+    try {
+        const newArticle = req.body;
+
+    }
+})
+
 export default articlesRouter;
