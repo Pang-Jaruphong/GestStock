@@ -17,7 +17,8 @@ const dbArticles = {
                     s.refSupplier,
                     s.name AS "Nom de fournisseur"
             FROM articles a
-            JOIN suppliers s ON a.supplier_id = s.id`
+            JOIN suppliers s ON a.supplier_id = s.id
+            ORDER BY s.id`
 
             const [rows] = await con.query(sql);
             return rows;
