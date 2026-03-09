@@ -1,6 +1,8 @@
 name: Premier Workflow 
 
-on: [push] 
+on:  
+ push:
+   branches: [ "develop" ]  
 
 jobs: 
   dire-bonjour: 
