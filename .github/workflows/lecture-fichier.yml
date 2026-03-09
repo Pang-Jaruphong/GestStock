@@ -1,5 +1,7 @@
 name: Lecture de Fichier
-on: push 
+on: 
+  push:
+    branches: [ "develop" ]   
 
 jobs:
   verification:
