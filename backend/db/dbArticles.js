@@ -33,19 +33,19 @@ const dbArticles = {
         try {
             con = await db.connectToDatabase();
             const sql =
-                `INSERT INTO articles a
-                (refArticle, name, Description, buyPrice, salePrice,actualStock, minStock, supplier_id)
+                `INSERT INTO articles
+                (refArticle, name, description, buyPrice, salePrice,actualStock, minStock, supplier_id)
                 VALUES (?,?,?,?,?,?,?,?)`;
 
             const values = [
-                a.refArticle,
-                a.name,
-                a.description,
-                a.buyPrice,
-                a.salePrice,
-                a.actualStock,
-                a.minStock,
-                a.supplier_id
+                articles.refArticle,
+                articles.name,
+                articles.description,
+                articles.buyPrice,
+                articles.salePrice,
+                articles.actualStock,
+                articles.minStock,
+                articles.supplier_id
             ]
 
             const [result] = await con.query(sql, values);
