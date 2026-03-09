@@ -69,7 +69,7 @@ articlesRouter.post('/', async (req, res) => {
     } catch (error) {
         if (error.name === 'ER_DUP_ENTRY' || error.errno === 1062) {
             return res.status(409).json({
-                error : "duplicate ref",
+                error : "Doublon ref",
                 message : `La référence ${req.body.refArticle} existe déjà dans le système `
             })
         }
