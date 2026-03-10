@@ -12,7 +12,7 @@ articlesRouter.get('/', async (req, res) => {
     }
 })
 
-// Help by Gemini for some gestion error : format number, compare price, ref double
+// Help by Gemini for some gestion error : format number, compare price
 // Add new article
 articlesRouter.post('/', async (req, res) => {
     try {
