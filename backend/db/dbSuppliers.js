@@ -41,6 +41,39 @@ const dbSuppliers = {
         } finally {
             if (con) await db.disconnectFromDatabase(con);
         }
+    },
+
+    // Help by Gemini for Object.keys() and setClause
+    updateSuppliers : async (id,updates) =>{
+        let con;
+        try {
+            con = await db.connectToDatabase();
+
+            // Crate a table with only column name
+            const keys = Object.keys(updates);
+
+            // List's column to modify dynamiquely : "refSuppliers = ?, name = ?, ..."
+            const setClause = keys.map(column => `${column} = ?`).join(', ');
+
+            // prepare new value
+            const values = Object.values(updates);
+
+            values.push(id);
+
+            const sql = `UPDATE suppliers SET ${setClause}
+                 WHERE id = ?;`
+
+            const [result] = await con.query(sql, values);
+            return {
+                found : result.affectedRows > 0,
+                changed : result.changedRows > 0
+            };
+        } catch (error) {
+            console.error("Erreur dans updateSuppliers :",error.message);
+            throw error;
+        } finally {
+            if (con) await db.disconnectFromDatabase(con);
+        }
     }
 }
 export {dbSuppliers};

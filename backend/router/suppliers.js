@@ -69,46 +69,68 @@ suppliersRouter.patch('/:id', async (req, res) => {
         const { id } = req.params;
         const updates = req.body; // Change only field modified
 
-        if (!id || isNan(parseInt(id))) {
+        if (!id || isNaN(parseInt(id))) {
             return res.status(400).json({
                 error : "Invalide id",
                 message : "L'identifiant invalide."
             });
         }
-        // Verified if a field changed
-        if (Object.keys(updates).length === 0) {
-            return res.status(400).json({
-                error : "Pas de données",
-                message : "Aucune donnée fournie pour la mise à jour."
-            })
-        }
 
-        if (updates.NPA === undefined || isNan(parseInt(updates.NPA))){
+        if (updates.NPA !== undefined && isNaN(parseInt(updates.NPA))){
             return res.status(400).json({
                 error : "Invalide format",
                 message : "Le NPA doit être un nombre"
             });
         }
 
-        const success = await dbSuppliers.updateSupplier(id, updates);
+        const keys = Object.keys(updates);
 
-        if (!success) {
+        // If information is empty
+        // Help by Gemini before if field{} is work and BDD is empty
+        const hasEmptyField = keys.some((key) =>
+            updates[key] !== undefined && updates[key].toString().trim() === ""
+        );
+        if (hasEmptyField) {
+            return res.status(400).json({
+                error : "Invalide data",
+                message : "Les champs ne peuvent pas être vide"
+            })
+        }
+
+        const result = await dbSuppliers.updateSuppliers(id, updates);
+
+        if (!result) {
             return res.status(404).json({
                 error : "Fournisseur non trouvé",
                 message : "Le Fournisseur n'a pas trouvé"
             })
         }
 
-        res.status(200).json({
-            message : `Le fournisseur ${updates.name} a été modifié`
-        })
-    } catch (error) {
-        if (error.name === 'ER_DUP_ENTRY' || error.errno === 1062) {
-            return res.status(409).json({
-                error : "Le données existe déjà"
+        // Emptry information
+        if (!result.found){
+            return res.status(404).json({
+                error : "Intouvable" ,
+                message : "Le fournisseur n'existe pas."
             })
         }
-        console.erreur("Erreur du serveur")
+
+        if (!result.changed) {
+            return res.status(200).json({
+                message: "Aucune modification détectée : les données sont identiques."
+            });
+        }
+
+        res.status(200).json({
+            message : `Le fournisseur a été modifié`
+        })
+
+    } catch (error) {
+        if (error.code === 'ER_DUP_ENTRY' || error.errno === 1062) {
+            return res.status(409).json({
+                error : "Ce numéro de référence existe déjà, veuillez changer le numéro"
+            })
+        }
+        console.error("Erreur détaillée :", error)
 
         return res.status(500).json({
             error : "Erreur du serveur"
