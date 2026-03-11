@@ -1,0 +1,19 @@
+name: Premier Workflow 
+
+on:  
+ push:
+   branches: [ "develop" ]  
+
+jobs: 
+  dire-bonjour: 
+    runs-on: ubuntu-latest 
+
+    steps: 
+      - name: Etape 1 
+        run: echo "Bonjour classe ICT324 !" 
+
+      - name: Etape 2 
+        run: echo "Ceci est mon premier workflow automatisé." 
+
+      - name: Etape 3
+        run: echo "Fin de l'exécution, robot au repos."
