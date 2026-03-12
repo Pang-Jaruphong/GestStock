@@ -21,13 +21,21 @@ articlesRouter.post('/', async (req, res) => {
         const requiredFields = [
             "refArticle",
             "name",
-            "description",
             "buyPrice",
             "salePrice",
             "actualStock",
             "minStock",
             "supplier_id"
         ];
+
+        // Status By default = true
+        if (newArticle.status === undefined || newArticle.status === null ||
+            newArticle.status === "" || isNaN(newArticle.status)) {
+            newArticle.status = 1;
+        } else {
+            newArticle.status = parseInt(newArticle.status);
+        }
+
 
         // If field is missing
         const missingFields = requiredFields.filter(field =>
@@ -57,6 +65,13 @@ articlesRouter.post('/', async (req, res) => {
                 warning: "price warning",
                 message: "Attention! le prix de vente est inférieur au prix d'achat. Voulez-vous vraiment continuer?"
             })
+        }
+
+        if (newArticle.buyPrice) {
+            newArticle.buyPrice = Number(parseFloat(newArticle.buyPrice).toFixed(2));
+        }
+        if (newArticle.salePrice) {
+            newArticle.salePrice = Number(parseFloat(newArticle.salePrice).toFixed(2));
         }
 
         const articleId = await dbArticles.createArticles(newArticle);
@@ -112,6 +127,15 @@ articlesRouter.patch('/:id', async (req, res) => {
                 error : "Invalide format",
                 message : "Le champ doit être numérique"
             });
+        }
+
+        const isPriceLower = parseFloat(updates.salePrice) < parseFloat(updates.buyPrice)
+
+        if (isPriceLower) {
+            return res.status(409).json({
+                warning: "price warning",
+                message: "Attention! le prix de vente est inférieur au prix d'achat. Voulez-vous vraiment continuer?"
+            })
         }
 
         const keys = Object.keys(updates);

@@ -1,7 +1,5 @@
-# Securty Password
 .env
-# Don't push these files on github
 node_modules/
 .idea/
-*.iml
 *.log
+*.iml

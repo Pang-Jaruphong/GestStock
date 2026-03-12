@@ -18,6 +18,7 @@ const dbArticles = {
                     s.name AS "Nom de fournisseur"
             FROM articles a
             JOIN suppliers s ON a.supplier_id = s.id
+            WHERE a.status=true
             ORDER BY s.id`
 
             const [rows] = await con.query(sql);
