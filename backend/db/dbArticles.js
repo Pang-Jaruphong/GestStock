@@ -92,6 +92,27 @@ const dbArticles = {
         } finally {
             if (con) await db.disconnectFromDatabase(con);
         }
+    },
+
+    deleteArticles : async (id) =>{
+        let con;
+        try {
+            con = await db.connectToDatabase();
+
+            const sql = `DELETE FROM articles WHERE id = ?;`
+
+            const [result] = await con.query(sql, [id]);
+
+            if (result.affectedRows === 0){
+                return null;
+            }
+            return true;
+        } catch (error) {
+            console.error("Erreur BDD lors de la suppression d'un article :",error.message);
+            throw error;
+        } finally {
+            if (con) await db.disconnectFromDatabase(con);
+        }
     }
 }
 export {dbArticles};

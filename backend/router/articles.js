@@ -1,6 +1,6 @@
 import express from 'express';
 import {dbArticles} from '../db/dbArticles.js';
-import {dbSuppliers} from "../db/dbSuppliers.js";
+import {isValidId} from "../helper.js";
 
 const articlesRouter = express.Router();
 
@@ -194,6 +194,34 @@ articlesRouter.patch('/:id', async (req, res) => {
         return res.status(500).json({
             error : "Erreur du serveur"
         });
+    }
+});
+
+articlesRouter.delete('/:id', async (req, res) => {
+    try {
+        const id = req.params.id;
+
+        if (!isValidId(id)) {
+            return res.status(400).json({
+                message : `Id invalide`})
+        }
+
+        const deleted = await dbArticles.deleteArticles(id)
+
+        if (!deleted) {
+            return res.status(404).json({
+                message : `Aucun article est trouvé`
+            });
+        }
+
+        res.status(200).json({
+            message : `L'article est supprimé avec succès`
+        })
+    } catch (error) {
+        console.error("Erreur lors de la suppression de l'article", error);
+        return res.status(500).json({
+            message : "Erreur du serveur"
+        })
     }
 })
 
