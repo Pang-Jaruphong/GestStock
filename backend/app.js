@@ -7,7 +7,7 @@ import suppliersRouter from "./router/suppliers.js";
 import ordersRouter from "./router/orders.js";
 import storiesRouter from "./router/stories.js";
 import ordersHasArticlesRouter from "./router/ordersHasArticles.js";
-
+import authRouter from "./router/auth.js";
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -15,6 +15,7 @@ const port = process.env.PORT || 5000;
 app.use(express.json());
 app.use(cors());
 
+app.use('/auth', authRouter);
 app.use('/users', usersRouter);
 app.use('/articles', articlesRouter);
 app.use('/suppliers', suppliersRouter);
