@@ -2,9 +2,13 @@
 const params = new URLSearchParams(window.location.search);
 const token = params.get('token');
 
-const passwordForm = document.querySelector("#login");
+if (window.location.pathname.includes('resetPassword.html')) {
+    const title = document.querySelector('h2');
+    title.innerText = "Bienvenue ! Créez votre mot de passe";
+}
+const passwordForm = document.getElementById('formLogin');
 
-passwordForm.addEventListener("submit", function (event) {
+passwordForm.addEventListener("submit", async function (event) {
     event.preventDefault();
 
     const mail = document.getElementById("mail").value;
@@ -23,7 +27,7 @@ passwordForm.addEventListener("submit", function (event) {
 
     try {
         // send to backend with fetch
-        const reponse = await fetch("http://localhost:5000/auth/setPassword", {
+        const reponse = await fetch("http://localhost:5000/auth/resetPassword", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",

@@ -13,7 +13,7 @@ authRouter.post('/resetPassword', async (req, res) => {
     try {
         const user = await dbAuth.findUserByToken(token);
         if (!user) {
-            return res.status(404).json({massage: 'Données invalide'});
+            return res.status(404).json({message: 'Données invalide'});
         }
         await dbAuth.activatePassword(user.id, password);
         return res.status(200).json({message: 'Mot de passe est mis à jour !'});
