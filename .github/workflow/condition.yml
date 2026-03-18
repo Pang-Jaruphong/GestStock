@@ -1,0 +1,15 @@
+name: condition.yml
+
+on: [push]
+
+jobs:
+  test-deploiement:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Simulation tests
+        run: echo "Test OK"
+
+      - name: Deploiement
+        if: github.ref == 'refs/heads/develop'
+        run: echo "Déploiement en cours..."
