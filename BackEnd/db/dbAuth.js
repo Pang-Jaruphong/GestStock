@@ -1,5 +1,6 @@
 import { db } from './database.js';
 import bcrypt from 'bcrypt'; // hash password
+import crypto from 'crypto'; // generate tokens
 
 // Help by Gemini
 const dbAuth = {
@@ -42,6 +43,26 @@ const dbAuth = {
         }
     },
 
+    // Generate et save a token by mail in BDD
+    generateResetToken: async (mail) => {
+        let con;
+        try {
+            con = await db.connectToDatabase();
+            // random token
+            const token = crypto.randomBytes(32).toString('hex');
+
+            // save BDD
+            const sql = `UPDATE users SET resetToken = ? WHERE mail = ?`;
+            const [result] = await con.execute(sql, [token, mail]);
+
+            return result.affectesRows > 0 ? token : null;
+        } catch (error) {
+            console.error("Erreur génération token :", error);
+            throw error;
+        } finally {
+            if (con) await db.disconnectFromDatabase(con);
+        }
+    }
 };
 
 export {dbAuth};
