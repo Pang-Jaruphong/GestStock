@@ -33,8 +33,8 @@ const dbAuth = {
             const sql = `
                 UPDATE users SET password = ?, resetToken = NULL
                 WHERE id = ?;`
-            const [result] = await con.execute(sql, [id, hashedPassword]);
-            return result;
+            const [result] = await con.execute(sql, [hashedPassword, id]);
+            return result.affectedRow > 0;
         } catch (error) {
             console.error("Erreur activation mot de passe :", error);
             throw error;
@@ -55,7 +55,7 @@ const dbAuth = {
             const sql = `UPDATE users SET resetToken = ? WHERE mail = ?`;
             const [result] = await con.execute(sql, [token, mail]);
 
-            return result.affectesRows > 0 ? token : null;
+            return result.affectedRows > 0 ? token : null;
         } catch (error) {
             console.error("Erreur génération token :", error);
             throw error;
