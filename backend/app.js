@@ -1,5 +1,6 @@
 import express from 'express';
 import cors from 'cors';
+import path from 'path';
 
 import usersRouter from "./router/users.js";
 import articlesRouter from "./router/articles.js";
@@ -14,6 +15,8 @@ const port = process.env.PORT || 5000;
 
 app.use(express.json());
 app.use(cors());
+// frontend use same port Backend local, help by ChatGPT
+app.use(express.static(path.join(process.cwd(), '../frontend/page')));
 
 app.use('/auth', authRouter);
 app.use('/users', usersRouter);
