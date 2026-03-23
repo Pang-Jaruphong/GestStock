@@ -7,7 +7,7 @@ const dbAuth = {
     // Search by Token
     findUserByToken: async (token) => {
         let con;
-        try{
+        try {
             con = await db.connectToDatabase();
             const sql = `
                 SELECT id, mail FROM users 
@@ -17,6 +17,22 @@ const dbAuth = {
         } catch (error) {
             console.error("Erreur recherche token :", error);
             throw error;
+        } finally {
+            if (con) await db.disconnectFromDatabase(con);
+        }
+    },
+
+    findUserByMail: async (mail) => {
+        let con;
+        try {
+            con = await db.connectToDatabase();
+            const sql = `
+                SELECT id, mail, password FROM users
+                WHERE mail = ?`;
+            const [rows] = await con.execute(sql, [mail]);
+            return rows[0];
+        } catch (error) {
+            console.error("Erreur recherche mail :", error);
         } finally {
             if (con) await db.disconnectFromDatabase(con);
         }
@@ -34,7 +50,7 @@ const dbAuth = {
                 UPDATE users SET password = ?, resetToken = NULL
                 WHERE id = ?;`
             const [result] = await con.execute(sql, [hashedPassword, id]);
-            return result.affectedRow > 0;
+            return result.affectedRows > 0;
         } catch (error) {
             console.error("Erreur activation mot de passe :", error);
             throw error;

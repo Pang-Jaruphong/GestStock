@@ -2,6 +2,7 @@ import express from 'express';
 import { dbAuth } from '../db/dbAuth.js';
 import nodemailer from 'nodemailer';
 import 'dotenv/config';
+import bcrypt from 'bcrypt';
 
 const authRouter = express.Router();
 
@@ -73,9 +74,12 @@ authRouter.post('/login', async (req, res) => {
             res.status(401).json({message: 'Email ou le mot de passe incorrect.'});
             return;
         }
-        res.status(200).json({message: "Bienvenue !", user: {mail: user.email}});
+        res.status(200).json({
+            message: "Bienvenue !",
+            user: {mail: user.mail}
+        });
     } catch (error) {
-        res.status(500).json({ massage : 'Erreur serveur' });
+        res.status(500).json({ message : 'Erreur serveur' });
     }
 })
 export default authRouter;

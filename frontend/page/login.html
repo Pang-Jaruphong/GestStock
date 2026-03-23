@@ -20,7 +20,7 @@
 <body class="bg-light">
     <section class="login">
         <div class = "boxForm shadow">
-            <form class = "formLogin">
+            <form class = "formLogin" id="formLogin">
                 <h1 class = "text-center mb-4">Login</h1>
                 <br />
                 <div class=" mb-3">
@@ -29,15 +29,14 @@
                             type="email"
                             class="form-control"
                             id="exampleInputEmail"
-                            aria-describedby="emailHelp"
-                    />
+                    required />
                 </div>
                 <div class=" mb-3">
-                    <label for="exampleInputPassword" class="form-label">Password</label>
+                    <label for="newPassword" class="form-label">Password</label>
                     <input
                         type="password"
                         class="form-control"
-                        id="exampleInputPassword"
+                        id="newPassword"
                     required />
                 </div>
                 <div class="text-center mt-3">

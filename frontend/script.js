@@ -94,9 +94,12 @@ if (passwordForm && window.location.pathname.includes('resetPassword.html')) {
 // Connexion to login
 const loginForm = document.getElementById('formLogin');
 
-if (loginForm && window.location.pathname.includes('login.html')) {
+if (loginForm) {
+    console.log("Formulaire de login détecté !");
+
     loginForm.addEventListener('submit', async function (event) {
         event.preventDefault();
+        console.log("le bouton login a été cliqué !")
 
         const mail = document.getElementById("exampleInputEmail").value;
         const password = document.getElementById("newPassword").value;
@@ -112,8 +115,8 @@ if (loginForm && window.location.pathname.includes('login.html')) {
             });
             const data = await response.json();
 
-            if (responsense.ok){
-                alert("Connexion réussible !");
+            if (response.ok){
+                alert("Connexion réussie !");
                 window.location.href = "dashboard.html";
             } else {
                 alert(data.message || "Identifiants incorrects");

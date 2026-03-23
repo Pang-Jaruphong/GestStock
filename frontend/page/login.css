@@ -82,3 +82,39 @@ body, html {
 .formLogin button:hover {
   background-color: #008d4a;
 }
+body { overflow: auto; display: flex; }
+
+.sidebar {
+    width: 250px;
+    height: 100vh;
+    background-color: #030644;
+    color: white;
+    padding: 20px;
+    position: fixed;
+}
+.main-content {
+    margin-left: 250px;
+    width: calc(100% - 250px);
+    padding: 40px;
+}
+
+.nav-link {
+    color: rgba(255,255,255,0.8);
+    margin: 15px 0;
+    padding: 15px;
+    border-radius: 10px;
+    text-decoration: none;
+    display: block;
+    transition: 0.3s;
+}
+
+.nav-link:hover, .nav-link.active {
+    background-color: #00a65a;
+    color: white;
+}
+
+.logout-btn {
+    margin-top: auto;
+    color: #ff4d4d;
+    cursor: pointer;
+}
