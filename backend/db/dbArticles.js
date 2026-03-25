@@ -8,18 +8,21 @@ const dbArticles = {
             // Join suppliers in article
             const sql =
                 `SELECT a.refArticle,
-                    a.name AS "Nom de l'article", 
+                    a.name, 
                     a.description,
-                    a.buyPrice AS "Prix d'achat",
-                    a.salePrice AS "Prix de vente",
-                    a.actualStock AS "Stock actuel",
-                    a.minStock AS "Stock minimun",
+                    a.buyPrice,
+                    a.salePrice,
+                    a.actualStock,
+                    a.minStock,
                     s.refSupplier,
-                    s.name AS "Nom de fournisseur"
+                    s.name AS "supplierName"
             FROM articles a
             JOIN suppliers s ON a.supplier_id = s.id
             WHERE a.status=true
-            ORDER BY s.id`
+            ORDER BY 
+                (a.actualStock = 0) DESC,
+                (a.actualStock < a.minStock) DESC,
+                s.id`
 
             const [rows] = await con.query(sql);
             return rows;
