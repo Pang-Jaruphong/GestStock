@@ -34,10 +34,78 @@
     <header class="d-flex justify-content-between align-items-center mb-5">
         <h1 style="color: #030444;">Bienvenue !</h1>
     </header>
+    <div class="row g-4 mb-5">
+        <div class="col-md-4">
+            <div class="card shadow-sm border-0 p-3">
+                <h6 class="text-muted">Articles en stock</h6>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card shadow-sm border-0 p-3">
+                <h6 class="text-muted">Modification</h6>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card shadow-sm border-0 p-3">
+                <h6 class="text-muted">Fournisseur</h6>
+            </div>
+        </div>
+    </div>
+    <div class="card shadow-sm border-0 mt-4">
+        <div class="card-header bg-white">
+            <h5 class="mb-0 text-danger">⚠️ Alertes Stock (Rupture ou Critique)</h5>
+        </div>
+        <div class="card-body">
+            <table class="table table-hover">
+                <thead>
+                <tr>
+                    <th>Référence</th>
+                    <th>Nom de l'article</th>
+                    <th>Stock Actuel</th>
+                    <th>Min Stock</th>
+                    <th>Fournisseur</th>
+                </tr>
+                </thead>
+                <tbody id="lowStockTableBody">
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>
 
 <div>
 
 </div>
+<script src="../script.js"></script>
+<script>
+    async function loadAlerts() {
+        const response = await fetch("http://localhost:5000/articles/lowStock");
+        const articles = await response.json();
+
+        // Help by Gemini : show different for sold out or few stock
+        const tableBody = document.getElementById("lowStockTableBody");
+
+        tableBody.innerHTML = articles.map(art => {
+            const rowClass = art.actualStock === 0 ? 'table-danger' : 'table-warning';
+
+            return `
+            <tr class="${rowClass}">
+                <td>${art.refArticle}</td>
+                <td>${art.name}</td>
+                <td style="text-align: center;font-weight:bold">${art.actualStock}</td>
+                <td style="text-align: center">${art.minStock}</td>
+                <td>${art.supplierName}</td>
+            </tr>
+        `;
+        }).join('');
+    }
+
+    document.addEventListener("DOMContentLoaded", loadAlerts);
+    document.getElementById('logoutBtn').addEventListener('click', () => {
+        localStorage.clear();
+        window.location.href = 'login.html';
+    });
+
+</script>
 </body>
 </html>
