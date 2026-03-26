@@ -47,7 +47,7 @@ const dbArticles = {
                 FROM articles a
                 JOIN suppliers s ON a.supplier_id = s.id
                 WHERE (a.status = 1 OR a.status IS NULL)
-                   AND a.actualStock <= a.minStock
+                   AND a.actualStock < a.minStock
                 ORDER BY a.actualStock`;
 
             const [rows] = await con.query(sql);
