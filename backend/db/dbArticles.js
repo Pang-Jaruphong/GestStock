@@ -7,7 +7,8 @@ const dbArticles = {
             con = await db.connectToDatabase();
             // Join suppliers in article
             const sql =
-                `SELECT a.refArticle,
+                `SELECT a.id,
+                    a.refArticle,
                     a.name, 
                     a.description,
                     a.buyPrice,
@@ -128,7 +129,8 @@ const dbArticles = {
         try {
             con = await db.connectToDatabase();
 
-            const sql = `DELETE FROM articles WHERE id = ?;`
+            const sql = `UPDATE articles SET status = 0 WHERE id = ?`;
+            // const sql = `DELETE * FROM articles WHERE id = ?;`
 
             const [result] = await con.query(sql, [id]);
 
