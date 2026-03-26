@@ -127,3 +127,22 @@ if (loginForm) {
         }
     });
 }
+
+async function deleteArticle(id, ref, name) {
+    if (confirm(`Voulez-vous vraiment supprimer l'article : \n[${ref}] ${name} ?`)) {
+        try {
+            const response = await fetch(`http://localhost:5000/articles/${id}`, {
+                method: 'DELETE',
+
+            });
+            if (response.ok) {
+                alert(`L'article ${name} supprimé avec succès !`);
+                loadAllArticles();
+            } else {
+                alert("Erreur lors de la suppression.");
+            }
+        } catch (error) {
+            console.error("Erreur:", error);
+        }
+    }
+}

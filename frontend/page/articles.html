@@ -83,6 +83,7 @@
         const tableBody = document.getElementById("getAllArticles");
 
         tableBody.innerHTML = articles.map(art => {
+            // color logic
             let rowClass = "";
 
             if (art.actualStock === 0 ) {
@@ -102,8 +103,13 @@
                 <td style="text-align: center">${art.minStock}</td>
                 <td>${art.supplierName}</td>
                 <td>${art.description}</td>
+                <td>
+                    <button class="btn btn-sm btn-danger"
+                        onclick="deleteArticle('${art.id}', '${art.refArticle}','${art.name}')">
+                    </button>
+                </td>
             </tr>
-        `;
+            `;
         }).join('');
     }
 
