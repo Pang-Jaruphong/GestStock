@@ -20,7 +20,6 @@ authRouter.post('/forget-password', async (req, res) => {
     const { mail } = req.body;
     try {
         const token = await dbAuth.generateResetToken(mail);
-        console.log("Token généré :", token);
         if (!token)
             return res.status(404).json({ message: "utilisateur non trouvé"});
 
