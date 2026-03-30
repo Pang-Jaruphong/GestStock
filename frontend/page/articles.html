@@ -2,7 +2,6 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="login.css" />
     <link
@@ -38,7 +37,8 @@
     <div class="row g-4 mb-5">
         <div class="col-md-4">
             <div class="card shadow-sm border-0 p-3">
-                <h6 class="text-muted">Ajouter l'article</h6>
+                <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalAddArticle">
+                    Ajouter l'article</button>
             </div>
         </div>
         <div class="col-md-4">
@@ -73,7 +73,7 @@
     </div>
 </div>
 
-<script src="../script.js"></script>
+<script src="script.js"></script>
 <script>
     async function loadAllArticles() {
         const response = await fetch("http://localhost:5000/articles");
@@ -120,6 +120,64 @@
     });
 
 </script>
-
+// help by Gemini pour guider à configuration
+// modal = backdrop or overlay to create formulaire
+<div class="modal fade" id="modalAddArticle" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Nouvel Article</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="addArticleForm">
+                    <div class="mb-3">
+                        <label class="form-label">Référence</label>
+                        <input type="text" name="refArticle" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Nom de l'article</label>
+                        <input type="text" name="name" class="form-control" required>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label">Prix d'achat</label>
+                            <input type="number" name="buyPrice" class="form-control" step="0.01">
+                        </div>
+                        <div class="col mb-6">
+                            <label class="form-label">Prix de vente</label>
+                            <input type="number" name="salePrice" class="form-control" step="0.01">
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label">Stock initial</label>
+                            <input type="number" name="actualStock" class="form-control" step="1" min="0" value="0">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Stock minimum</label>
+                            <input type="number" name="minStock" class="form-control" step="1">
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Fournisseur</label>
+                        <select name="supplier_id" id="supplierSelect" class="form-select" required>
+                            <option value="">-- Select --</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Description</label>
+                        <textarea name="description" class="form-control" rows="3">
+                        </textarea>
+                    </div>
+                    <div class="modal-footer mt-4">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                        <button type="submit" class="btn btn-primary">Enregistrer l'article</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 </body>
 </html>

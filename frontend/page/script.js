@@ -145,4 +145,65 @@ async function deleteArticle(id, ref, name) {
             console.error("Erreur:", error);
         }
     }
+};
+
+// get supplier into select
+async function loadSuppliers() {
+    try {
+        const response = await fetch(`http://localhost:5000/suppliers`);
+        if (!response.ok) throw new Error("Erreur réseau");
+
+        const suppliers = await response.json();
+        const select =document.getElementById("supplierSelect");
+
+        // empty et fill selection
+        if (select) {
+            select.innerHTML = '<option value="">-- Selectione --</option>';
+            suppliers.forEach((supplier) => {
+                select.innerHTML += '<option value="${s.id}">${suppliers.name}</option>';
+            });
+            console.log("Fournisseurs chargés avec succès");
+        }
+    } catch (error) {
+        console.error("Erreur les chargements des fournisseurs:", error);
+    }
 }
+
+// call function loadSuppliers
+document.addEventListener('DOMContentLoaded', loadSuppliers);
+
+const addArticleForm = document.getElementById('addArticleForm');
+
+addArticleForm.addEventListener('submit', async function (event) {
+    event.preventDefault();
+
+    // get form articles
+    const formData = new FormData(addArticleForm);
+    const articleData = Object.fromEntries(formData.entries());
+
+    try {
+        const response = await fetch(`http://localhost:5000/articles`, {
+            method: 'POST',
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify(articleData),
+        });
+
+        if (response.ok) {
+            alert("Article ajouté avec succès");
+
+            const modalElement = document.getElementById('modalAddArticles');
+            const modal = bootstrap.Modal.getInstance(modalElement);
+            modal.hide();
+
+            addArticleForm.reset();
+            loadAllArticles();
+            loadSuppliers();
+        } else {
+            const errorData = await response.json();
+            alert("Erreur : " + errorData.message);
+        }
+    } catch (error) {
+        console.error("Erreur lors de l'envoie : ", error);
+        alert("Impossible de connexion du serveur!");
+    }
+})
