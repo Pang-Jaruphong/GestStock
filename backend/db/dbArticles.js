@@ -73,7 +73,7 @@ const dbArticles = {
             const values = [
                 articles.refArticle,
                 articles.name,
-                articles.description,
+                articles.description || null,
                 articles.buyPrice,
                 articles.salePrice,
                 articles.actualStock,
