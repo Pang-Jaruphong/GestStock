@@ -67,8 +67,8 @@ const dbArticles = {
             con = await db.connectToDatabase();
             const sql =
                 `INSERT INTO articles
-                (refArticle, name, description, buyPrice, salePrice,actualStock, minStock, supplier_id)
-                VALUES (?,?,?,?,?,?,?,?)`;
+                (refArticle, name, description, buyPrice, salePrice,actualStock, minStock, supplier_id, status)
+                VALUES (?,?,?,?,?,?,?,?,?)`;
 
             const values = [
                 articles.refArticle,
@@ -78,7 +78,8 @@ const dbArticles = {
                 articles.salePrice,
                 articles.actualStock,
                 articles.minStock,
-                articles.supplier_id
+                articles.supplier_id,
+                articles.status || 1
             ]
 
             const [result] = await con.query(sql, values);
