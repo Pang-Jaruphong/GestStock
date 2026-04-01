@@ -76,7 +76,7 @@
 <div>
 
 </div>
-<script src="../script.js"></script>
+<script src="script.js"></script>
 <script>
     async function loadAlerts() {
         const response = await fetch("http://localhost:5000/articles/lowStock");
@@ -101,10 +101,6 @@
     }
 
     document.addEventListener("DOMContentLoaded", loadAlerts);
-    document.getElementById('logoutBtn').addEventListener('click', () => {
-        localStorage.clear();
-        window.location.href = 'login.html';
-    });
 
 </script>
 </body>
