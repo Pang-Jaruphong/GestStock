@@ -22,6 +22,15 @@ articlesRouter.get('/lowStock', async (req, res) => {
     }
 })
 
+articlesRouter.get('/suppliers', async (req, res) => {
+    try {
+        const articles = await dbArticles.getAllArticlesBySuppliers();
+        res.json(articles);
+    } catch (error) {
+        res.status(500).json({error:"Impossible de connexion de la base de données"});
+    }
+})
+
 // Help by Gemini for some gestion error : format number, compare price
 // Add new article
 articlesRouter.post('/', async (req, res) => {

@@ -10,6 +10,11 @@ if (window.location.pathname.includes('resetPassword.html')) {
 
 const API_URL = 'http://localhost:5000';
 
+let allArticles = [];
+
+let isEditMode = false;
+let currentArticleId = null;
+
 // Reinitial password on login.html
 const forgotBtn = document.getElementById('forgotPassword');
 
@@ -154,16 +159,25 @@ async function loadSuppliers() {
         if (!response.ok) throw new Error("Erreur réseau");
 
         const suppliers = await response.json();
-        const select =document.getElementById("supplierSelect");
+        const select1 =document.getElementById("supplierSelect");
+        const select2 =document.getElementById("supplierSelect2");
 
         // empty et fill selection
-        if (select) {
-            select.innerHTML = `<option value="">-- Selection --</option>`;
+        if (select1) {
+            select1.innerHTML = `<option value="">-- Selection --</option>`;
             suppliers.forEach((s) => {
-                select.innerHTML += `<option value="${s.id}">${s.name}</option>`;
+                select1.innerHTML += `<option value="${s.id}">${s.name}</option>`;
             });
 
-            console.log("Fournisseurs chargés avec succès");
+            console.log("Fournisseurs 1 chargés avec succès");
+        }
+        if (select2) {
+            select2.innerHTML = `<option value="">-- Selection --</option>`;
+            suppliers.forEach((s) => {
+                select2.innerHTML += `<option value="${s.id}">${s.name}</option>`;
+            });
+
+            console.log("Fournisseurs 2 chargés avec succès");
         }
     } catch (error) {
         console.error("Erreur les chargements des fournisseurs:", error);
@@ -172,9 +186,12 @@ async function loadSuppliers() {
 
 async function loadAllArticles() {
     const response = await fetch(`${API_URL}/articles`);
-    const articles = await response.json();
+    allArticles = await response.json();
 
-    // Help by Gemini : show different for sold out or few stock
+    displayArticles(allArticles);
+}
+// Help by Gemini : show different for sold out or few stock
+async function displayArticles(articles) {
     const tableBody = document.getElementById("getAllArticles");
 
     tableBody.innerHTML = articles.map(art => {
@@ -213,6 +230,24 @@ document.addEventListener("DOMContentLoaded", () => {
     if (typeof loadAllArticles === "function") loadAllArticles();
     if (typeof loadSuppliers === "function") loadSuppliers();
     if (typeof AddArticle === "function") AddArticle();
+    const btnAdd = document.getElementById("btnAddArticle");
+
+    if (btnAdd) {
+        btnAdd.addEventListener("click", () => {
+            isEditMode = false;
+            currentArticleId = null;
+
+            // reset formulaire
+            const form = document.getElementById("addArticleForm");
+            if (form) {
+                form.reset();
+            }
+
+            // reset titre
+            const title = document.querySelector('#modalAddArticle .modal-title');
+            if (title) title.innerText = "Ajouter un article";
+        });
+    }
     const btnEdit = document.getElementById("btnOpenEditListEdit");
 });
 
@@ -242,20 +277,35 @@ function AddArticle() {
             status: 1
         }
 
+        let url = `${API_URL}/articles`
+        let method = "POST";
+
+        if (isEditMode && currentArticleId) {
+            url = `${API_URL}/articles/${currentArticleId}`;
+            method = "PATCH";
+
+            // const note = prompt("Veuillez saisir la raison de la modification :");
+            // if (note === null) return;
+            // articleData.modificationNote = note;
+        }
+
         if (!articleData.refArticle || !articleData.name) {
             alert("Référence et nom sont oubligatoire")
             return;
         }
 
         try {
-            const response = await fetch(`${API_URL}/articles`, {
-                method: 'POST',
+            const response = await fetch(url, {
+                method: method,
                 headers: {"Content-Type": "application/json"},
                 body: JSON.stringify(articleData),
             });
 
             if (response.ok) {
-                alert("Article ajouté avec succès");
+                alert(isEditMode ? "Article modifié !" : "Article ajouté !");
+
+                isEditMode = false;
+                currentArticleId = null;
 
             // close modal
             const modalElement = document.getElementById("modalAddArticle");
@@ -281,7 +331,7 @@ function AddArticle() {
 // create list to click
 async function prepareEditList() {
     try {
-        const response = await fetch(`${API_URL}articles`);
+        const response = await fetch(`${API_URL}/articles`);
         const articles = await response.json();
         const listContainer = document.getElementById("listEditArticles");
 
@@ -295,6 +345,7 @@ async function prepareEditList() {
     }
 }
 
+// aider par Gemini
 function selectArticleForEdit(article) {
     isEditMode = true;
     currentArticleId = article.id;
@@ -319,6 +370,28 @@ function selectArticleForEdit(article) {
     const editModal = new bootstrap.Modal(document.getElementById('modalAddArticle'));
     editModal.show();
 }
+
+async function loadArticlesBySupplier(supplier_id) {
+    if (!supplier_id) {
+        displayArticles(allArticles);
+        return;
+    }
+
+    const selectedText = document.querySelector("#supplierSelect2 option:checked").text;
+
+    const filteredArticles = allArticles.filter(
+        art => art.supplierName === selectedText
+    );
+
+    displayArticles(filteredArticles);
+}
+
+document.addEventListener("change", (event) => {
+    if (event.target.id === "supplierSelect2") {
+        const supplier_id = event.target.value;
+        loadArticlesBySupplier(supplier_id);
+    }
+});
 
 document.querySelector('[data-bs-target="#modalSelectEdit"]').addEventListener('click', prepareEditList);
 

@@ -61,6 +61,40 @@ const dbArticles = {
         }
     },
 
+    getAllArticlesBySuppliers : async () =>{
+        let con;
+        try {
+            con = await db.connectToDatabase();
+            // Join suppliers in article
+            const sql =
+                `SELECT a.id,
+                        a.refArticle,
+                        a.name,
+                        a.description,
+                        a.buyPrice,
+                        a.salePrice,
+                        a.actualStock,
+                        a.minStock,
+                        s.refSupplier,
+                        s.name AS "supplierName"
+                 FROM articles a
+                          JOIN suppliers s ON a.supplier_id = s.id
+                 WHERE a.status=true AND supplier_id = ?
+                 ORDER BY
+                     (a.actualStock = 0) DESC,
+                     (a.actualStock < a.minStock) DESC,
+                     s.id`
+
+            const [rows] = await con.query(sql);
+            return rows;
+        } catch (error) {
+            console.log("Erreur SQL lors de la récupération :",error.message);
+            throw error;
+        } finally {
+            if (con) await db.disconnectFromDatabase(con);
+        }
+    },
+
     createArticles : async (articles) =>{
         let con;
         try {
